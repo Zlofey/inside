@@ -133,4 +133,4 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-TIME_ZONE = 'Europe/Moscow'
+AUTH_USER_MODEL = 'api.User'
