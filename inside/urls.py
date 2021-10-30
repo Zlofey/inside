@@ -16,11 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from api.auth import (MyTokenObtainPairView, MyTokenRefreshView)
+from api.views import MessageView
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', MyTokenRefreshView.as_view(), name='token_refresh'),
+    path('api/message/', MessageView.as_view(), name='post_message'),
 
 ]
