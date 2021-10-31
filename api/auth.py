@@ -22,5 +22,5 @@ class MyTokenRefreshSerializer(TokenRefreshSerializer):
         return token
 
 
-class MyTokenRefreshView(TokenObtainPairView):
+class MyTokenRefreshView(TokenRefreshView):
     serializer_class = MyTokenRefreshSerializer

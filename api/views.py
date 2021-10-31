@@ -15,7 +15,7 @@ class MessageView(APIView):
                 try:
                     limit = int(text[1])
                     if 1 <= limit <= 15:
-                        messages = Message.objects.filter(user=self.request.user).order_by('-created_at')[:limit]
+                        messages = Message.objects.filter(user=self.request.user).order_by('-created_at')[:limit+1]
                         serializer = MessageSerializer(messages, many=True)
                         return Response(serializer.data)
                     else:
