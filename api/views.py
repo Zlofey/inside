@@ -1,31 +1,29 @@
-from django.shortcuts import render
-
-# Create your views here.
-from rest_framework import serializers
-from rest_framework.generics import ListCreateAPIView, CreateAPIView
-from api.serializers import MessageWriteSerializer
-
-
-# class Message(ListCreateAPIView):
-
-# class PrepaidCardView(generics.CreateAPIView):
-#     serializer_class = CardCreateSerializer
-#     permission_classes = [IsAdminUser]
-#
-#     def post(self, request, *args, **kwargs):
-#         serializer = self.get_serializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         card = serializer.save()
-#         card.state = 'payed'
-#         card.payed = timezone.now()
-#         card.created_from = 'admin'
-#         card.save()
-#         headers = self.get_success_headers(serializer.data)
-#         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+from rest_framework import serializers, status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from api.models import Message
+from api.serializers import MessageSerializer
 
 
-class MessageView(CreateAPIView):
-    serializer_class = MessageWriteSerializer
+class MessageView(APIView):
+    serializer_class = MessageSerializer
 
-    def perform_create(self, serializer):
+    def post(self, request, *args, **kwargs):
+        text = request.data['text'].split()
+        if len(text) == 2:
+            if text[0] == 'history':
+                try:
+                    limit = int(text[1])
+                    if 1 <= limit <= 15:
+                        messages = Message.objects.filter(user=self.request.user).order_by('-created_at')[:limit]
+                        serializer = MessageSerializer(messages, many=True)
+                        return Response(serializer.data)
+                    else:
+                        return Response("Please enter number (1 <= n <= 15) to get your latest n messages ")
+                except:
+                    return Response("Please enter number (1 <= n <= 15) to get your latest n messages ")
+
+        serializer = MessageSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
         serializer.save(user=self.request.user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
