@@ -2,16 +2,49 @@
 тестовое для inside
 
 в директории проекта запустить команды:
+```
+# собрать docker (порт 5432 должен быть свободен)
+docker-compose build		
 
-1 docker-compose build                                      # собрать docker
+# применить миграции
+docker-compose run web python manage.py migrate		
 
-2 docker-compose run web python manage.py migrate           # применить миграции
+# создать суперюзера (для доступа в админку)
+docker-compose run web python manage.py createsuperuser     
 
-3 docker-compose run web python manage.py createsuperuser   # создать суперюзера (для доступа в админку)
+# запуск сервера
+docker-compose up                                                 	
 
-4 docker-compose up                                         # запуск сервера
+
+# запуск тестов
+docker-compose run web python manage.py test                        
+```
+
+можно затестить онлайн:
 
 
-  
-docker-compose run web python manage.py test                # запуск тестов
+[heroku](https://inside-test.herokuapp.com/)
 
+[админка](https://inside-test.herokuapp.com/admin) (test_user, test_pass)
+
+примеры запросов:
+
+```
+запрос токена
+	curl  -X POST  \
+	-H "Content-Type: application/json"  -d '{"username": "test_user", "password": "test_pass"}' \
+	https://inside-test.herokuapp.com/api/token/
+
+написать сообщение
+  curl -X POST \
+  -H "Authorization: Bearer <полученный Token>" \
+  -H "Content-Type: application/json"  -d '{"text": "<Ваш текст>"}' \
+  https://inside-test.herokuapp.com/api/message/
+
+получить 1<=n<=15 своих последних сообщений
+  curl -X POST \
+  -H "Authorization: Bearer <полученный Token>" \
+  -H "Content-Type: application/json"  -d '{"text": "history <число от 1 до 15>"}' \
+  https://inside-test.herokuapp.com/api/message/
+
+```
