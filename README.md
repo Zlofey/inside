@@ -1,5 +1,8 @@
 # inside
+
 тестовое для inside
+
+django + postgresql + django-rest-framework + django-rest-framework-simplejwt
 
 в директории проекта запустить команды:
 ```
@@ -17,7 +20,15 @@ docker-compose up
 
 
 # запуск тестов
-docker-compose run web python manage.py test                        
+docker-compose run web python manage.py test       
+
+```
+endpoints:
+
+```
+/api/token/ - post, запрос токена
+/api/message/ - post, написать сообщение, 
+если сообщение вида "history 10" - вывести последние 10 сообщений
 ```
 
 можно затестить онлайн:
